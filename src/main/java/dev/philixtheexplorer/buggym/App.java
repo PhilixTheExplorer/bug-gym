@@ -774,6 +774,9 @@ public class App extends Application {
                 View:
                 • Ctrl+Shift+D    Toggle Dark Mode
                 • Ctrl+B          Toggle Sidebar
+                • Ctrl+=          Zoom In
+                • Ctrl+-          Zoom Out
+                • Ctrl+0          Reset Zoom
 
                 Run:
                 • F5              Run Tests
