@@ -54,6 +54,62 @@ public class CodeRunner {
         return RunResult.success(results, totalTime);
     }
 
+    /**
+     * Compiles and runs the user's code main method without checking output.
+     */
+    public RunResult runMain(String code) {
+        long startTime = System.currentTimeMillis();
+
+        // Compile the code
+        CompilationResult compilation = compileCode(code);
+        if (!compilation.success()) {
+            return RunResult.compilationFailure(compilation.errorMessage());
+        }
+
+        TestCase dummyCase = new TestCase("Run main()", "N/A");
+
+        Future<TestResult> future = executor.submit(() -> {
+            long tStart = System.currentTimeMillis();
+            InputStream originalIn = System.in;
+            PrintStream originalOut = System.out;
+            try {
+                System.setIn(new ByteArrayInputStream(new byte[0]));
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                PrintStream printStream = new PrintStream(outputStream, true, StandardCharsets.UTF_8);
+                System.setOut(printStream);
+
+                try {
+                    var mainMethod = compilation.compiledClass().getMethod("main", String[].class);
+                    mainMethod.invoke(null, (Object) new String[0]);
+                } catch (Exception e) {
+                    Throwable cause = e.getCause() != null ? e.getCause() : e;
+                    return TestResult.error(dummyCase, "Runtime error: " + cause.getMessage());
+                }
+
+                String output = outputStream.toString(StandardCharsets.UTF_8);
+                return TestResult.success(dummyCase, output, System.currentTimeMillis() - tStart);
+
+            } finally {
+                System.setIn(originalIn);
+                System.setOut(originalOut);
+            }
+        });
+
+        try {
+            TestResult result = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
+            return RunResult.success(List.of(result), System.currentTimeMillis() - startTime);
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            return RunResult.success(
+                    List.of(TestResult.error(dummyCase, "Timeout: Execution exceeded " + TIMEOUT_MS + "ms")),
+                    System.currentTimeMillis() - startTime);
+        } catch (Exception e) {
+            return RunResult.success(
+                    List.of(TestResult.error(dummyCase, "Execution error: " + e.getMessage())),
+                    System.currentTimeMillis() - startTime);
+        }
+    }
+
     private CompilationResult compileCode(String code) {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null) {

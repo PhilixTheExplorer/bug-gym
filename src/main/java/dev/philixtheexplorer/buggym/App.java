@@ -489,14 +489,36 @@ public class App extends Application {
             return;
         }
 
-        if (currentQuestion.getTestCases().isEmpty()) {
-            showError("No Test Cases", "This question doesn't have any test cases defined.");
-            return;
-        }
-
         String code = codeEditor.getCode();
         if (code.trim().isEmpty()) {
             showError("Empty Code", "Please write some code before running tests.");
+            return;
+        }
+
+        if (currentQuestion.getTestCases().isEmpty()) {
+            // Run without test cases (just run main)
+            Task<RunResult> task = new Task<>() {
+                @Override
+                protected RunResult call() {
+                    return codeRunner.runMain(code);
+                }
+            };
+
+            resultsPanel.showLoading();
+            codeEditor.setEditable(false);
+
+            task.setOnSucceeded(e -> {
+                RunResult result = task.getValue();
+                resultsPanel.showResults(result);
+                codeEditor.setEditable(true);
+            });
+
+            task.setOnFailed(e -> {
+                resultsPanel.showError("Execution failed: " + task.getException().getMessage());
+                codeEditor.setEditable(true);
+            });
+
+            new Thread(task).start();
             return;
         }
 
