@@ -17,6 +17,31 @@
 
 **Bug Gym** is an offline Java practice desktop app that simulates Moodle-style exam questions with syntax highlighting, automated tests, and beginner-friendly progression. No login, No internet required, no complex IDE setup, just focused learning.
 
+## Screenshots
+
+### Main Interface
+
+![Bug Gym Main Screen](screenshots/main-screen.png)
+
+## Supported platforms
+
+Windows • macOS • Linux
+
+## Installation (GitHub Releases)
+
+1. Open the [Releases](https://github.com/PhilixTheExplorer/bug-gym/releases) page for this repository.
+2. Download the installer or archive for your operating system.
+3. Install or extract, then launch the application.
+
+### Security Notice (Unsigned Installers)
+
+Bug Gym is an open-source project without paid code-signing certificates. Your OS may show warnings:
+
+- **macOS**: Right-click → Open, then confirm
+- **Windows**: Click "More Info" → "Run Anyway"
+
+**If you downloaded from the official GitHub Releases page, it's safe.**
+
 ## The Problem
 
 **At KMUTT's School of Information Technology (SIT)**, students take Java programming exams through Moodle:
@@ -45,31 +70,6 @@
 - **Educators** who want to create custom practice problems
 - **Self-learners** who need structured practice without Moodle
 - **Schools** that want an offline alternative for lab exercises
-
-## Screenshots
-
-### Main Interface
-
-![Bug Gym Main Screen](screenshots/main-screen.png)
-
-## Supported platforms
-
-Windows • macOS • Linux
-
-## Installation (GitHub Releases)
-
-1. Open the [Releases](https://github.com/PhilixTheExplorer/bug-gym/releases) page for this repository.
-2. Download the installer or archive for your operating system.
-3. Install or extract, then launch the application.
-
-### Security Notice (Unsigned Installers)
-
-Bug Gym is an open-source project without paid code-signing certificates. Your OS may show warnings:
-
-- **macOS**: Right-click → Open, then confirm
-- **Windows**: Click "More Info" → "Run Anyway"
-
-**If you downloaded from the official GitHub Releases page, it's safe.**
 
 ## Comparison
 
