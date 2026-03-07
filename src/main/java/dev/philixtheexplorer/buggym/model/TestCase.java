@@ -27,10 +27,16 @@ public record TestCase(
     public static String normalizeOutput(String output) {
         if (output == null)
             return "";
-        return output
+        String normalized = output
                 .replace("\r\n", "\n")
-                .replace("\r", "\n")
-                .trim();
+                .replace("\r", "\n");
+
+        String[] lines = normalized.split("\n", -1);
+        for (int i = 0; i < lines.length; i++) {
+            lines[i] = lines[i].stripTrailing();
+        }
+
+        return String.join("\n", lines).trim();
     }
 
     @Override

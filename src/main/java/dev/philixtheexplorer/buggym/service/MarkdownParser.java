@@ -160,7 +160,7 @@ public class MarkdownParser {
 
         // Handle escaped newlines
         cleaned = cleaned.replaceAll("\\s*\\\\n\\s*", "\n");
-        cleaned = cleaned.replaceAll("\\s*<br/?>\\s*", "\n");
+        cleaned = cleaned.replaceAll("(?i)\\s*<br\\s*/?>\\s*", "\n");
 
         // Handle escaped markdown characters
         cleaned = cleaned.replace("\\*", "*");
@@ -360,6 +360,6 @@ public class MarkdownParser {
                 """;
 
         return template.replace("__BODY_CLASS__", darkMode ? "" : " class=\"light-mode\"")
-                       .replace("__BODY_CONTENT__", bodyHtml);
+                .replace("__BODY_CONTENT__", bodyHtml);
     }
 }

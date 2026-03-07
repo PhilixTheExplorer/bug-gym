@@ -28,25 +28,22 @@ public class QuestionTreeView extends TreeView<Object> {
             protected void updateItem(Object item, boolean empty) {
                 super.updateItem(item, empty);
 
+                getStyleClass().removeAll("category-cell", "question-cell", "solved-cell");
+
                 if (empty || item == null) {
                     setText(null);
                     setGraphic(null);
-                    getStyleClass().removeAll("category-cell", "question-cell", "solved-cell");
                 } else if (item instanceof Category category) {
                     setText(category.getDisplayName());
                     setGraphic(null);
                     getStyleClass().add("category-cell");
-                    getStyleClass().removeAll("question-cell", "solved-cell");
                 } else if (item instanceof Question question) {
                     String prefix = question.isSolved() ? "✓ " : "";
                     setText(prefix + "Question " + question.getOrder());
                     setGraphic(null);
                     getStyleClass().add("question-cell");
-                    getStyleClass().remove("category-cell");
                     if (question.isSolved()) {
                         getStyleClass().add("solved-cell");
-                    } else {
-                        getStyleClass().remove("solved-cell");
                     }
                 } else {
                     setText(item.toString());
