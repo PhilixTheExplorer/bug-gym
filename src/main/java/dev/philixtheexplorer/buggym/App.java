@@ -6,6 +6,8 @@ import dev.philixtheexplorer.buggym.model.RunResult;
 import dev.philixtheexplorer.buggym.service.CodeRunner;
 import dev.philixtheexplorer.buggym.service.ProgressManager;
 import dev.philixtheexplorer.buggym.service.QuestionLoader;
+import dev.philixtheexplorer.buggym.service.UpdateService;
+import dev.philixtheexplorer.buggym.ui.AppDialogs;
 import dev.philixtheexplorer.buggym.ui.CodeEditor;
 import dev.philixtheexplorer.buggym.ui.HomePageView;
 import dev.philixtheexplorer.buggym.ui.MainMenuBarFactory;
@@ -19,20 +21,12 @@ import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.*;
 
 /**
@@ -45,6 +39,7 @@ public class App extends Application {
     private QuestionLoader questionLoader;
     private CodeRunner codeRunner;
     private ProgressManager progressManager;
+    private UpdateService updateService;
 
     private QuestionTreeView questionTree;
     private WebView questionView;
@@ -54,7 +49,6 @@ public class App extends Application {
 
     private Question currentQuestion;
     private boolean darkMode = true;
-    private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
     private boolean suppressPracticeAutoSwitch = false;
 
@@ -67,6 +61,7 @@ public class App extends Application {
         questionLoader = new QuestionLoader();
         codeRunner = new CodeRunner();
         progressManager = new ProgressManager();
+        updateService = new UpdateService();
 
         // Load questions
         try {
@@ -277,22 +272,6 @@ public class App extends Application {
         }
     }
 
-    private Alert createStyledAlert(Alert.AlertType type, String title, String header) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-
-        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/icons/bug-gym.png")));
-        icon.setFitHeight(48);
-        icon.setFitWidth(48);
-        alert.setGraphic(icon);
-
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/bug-gym.png")));
-
-        return alert;
-    }
-
     private void executeCodeRun(boolean isSubmission) {
         if (currentQuestion == null) {
             showError("No Question Selected", "Please select a question from the sidebar.");
@@ -367,7 +346,8 @@ public class App extends Application {
         questionTree.refreshQuestion(currentQuestion);
         updateProgress();
 
-        Alert alert = createStyledAlert(Alert.AlertType.INFORMATION, "Congratulations!", "🎉 All tests passed!");
+        Alert alert = AppDialogs.createStyledAlert(getClass(), Alert.AlertType.INFORMATION, "Congratulations!",
+            "🎉 All tests passed!");
         alert.setContentText("Great job! You've successfully solved this question.");
 
         ButtonType nextQuestionBtn = new ButtonType("Next Question", ButtonBar.ButtonData.NEXT_FORWARD);
@@ -453,50 +433,12 @@ public class App extends Application {
     }
 
     private void showError(String title, String message) {
-        Alert alert = createStyledAlert(Alert.AlertType.ERROR, title, null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        AppDialogs.showError(getClass(), title, message);
     }
 
     private void showAbout() {
-        Alert alert = createStyledAlert(Alert.AlertType.INFORMATION, "About BugGym", "BugGym: Love, Java & Bugs");
-
         String version = getAppVersion();
-
-        Text t1 = new Text("""
-                BugGym: A playground for Java beginners.
-                Built with patience, curiosity,
-                and an unreasonable amount of love.
-
-                This app was crafted for someone special to make learning Java
-                feel less scary, more fun, and a little bit magical.
-
-                Inspired by love, shared with the community.
-
-                Expect bugs.
-                Fix them together.
-                Learn something new every day.
-
-                Version: %s
-
-                Source: """.formatted(version));
-
-        Hyperlink sourceLink = new Hyperlink("https://github.com/PhilixTheExplorer/bug-gym");
-        sourceLink.setOnAction(e -> getHostServices().showDocument(sourceLink.getText()));
-
-        Text t2 = new Text("""
-
-
-                License: GPLv3
-
-                Built with JavaFX 21,
-                coffee, and a heart that never stops compiling
-                """);
-
-        TextFlow flow = new TextFlow(t1, sourceLink, t2);
-        alert.getDialogPane().setContent(flow);
-
-        alert.showAndWait();
+        AppDialogs.showAbout(getClass(), version, url -> getHostServices().showDocument(url));
     }
 
     private String getAppVersion() {
@@ -519,21 +461,7 @@ public class App extends Application {
         Task<String> task = new Task<>() {
             @Override
             protected String call() throws Exception {
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create("https://api.github.com/repos/PhilixTheExplorer/bug-gym/releases/latest"))
-                        .header("Accept", "application/vnd.github+json")
-                        .GET().build();
-                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 200) {
-                    String body = response.body();
-                    int idx = body.indexOf("\"tag_name\":");
-                    if (idx != -1) {
-                        int start = body.indexOf('"', idx + 11) + 1;
-                        int end = body.indexOf('"', start);
-                        return body.substring(start, end).replaceFirst("^v", "");
-                    }
-                }
-                return null;
+                return updateService.fetchLatestVersion();
             }
         };
         task.setOnSucceeded(e -> {
@@ -542,19 +470,8 @@ public class App extends Application {
             if (latest == null) {
                 if (!silent)
                     showInfo("Update Check", "Could not retrieve version info.");
-            } else if ("dev".equals(current) || compareVersions(current, latest) < 0) {
-                Alert alert = createStyledAlert(Alert.AlertType.INFORMATION, "Update Available",
-                        "A new version is available: v" + latest);
-
-                Text t1 = new Text("You have v" + current + ".\nVisit ");
-                Hyperlink link = new Hyperlink("https://github.com/PhilixTheExplorer/bug-gym/releases");
-                link.setOnAction(evt -> getHostServices().showDocument(link.getText()));
-                Text t2 = new Text(" to download.");
-
-                TextFlow flow = new TextFlow(t1, link, t2);
-                alert.getDialogPane().setContent(flow);
-
-                alert.showAndWait();
+            } else if ("dev".equals(current) || updateService.compareVersions(current, latest) < 0) {
+                AppDialogs.showUpdateAvailable(getClass(), current, latest, url -> getHostServices().showDocument(url));
             } else {
                 if (!silent)
                     showInfo("Up to Date", "You are running the latest version (v" + current + ").");
@@ -567,62 +484,12 @@ public class App extends Application {
         new Thread(task).start();
     }
 
-    private int compareVersions(String v1, String v2) {
-        String[] a = v1.split("\\."), b = v2.split("\\.");
-        for (int i = 0; i < Math.max(a.length, b.length); i++) {
-            int n1 = 0;
-            int n2 = 0;
-            try {
-                n1 = i < a.length ? Integer.parseInt(a[i].replaceAll("\\D.*", "")) : 0;
-            } catch (NumberFormatException ignored) {
-            }
-            try {
-                n2 = i < b.length ? Integer.parseInt(b[i].replaceAll("\\D.*", "")) : 0;
-            } catch (NumberFormatException ignored) {
-            }
-
-            if (n1 != n2)
-                return Integer.compare(n1, n2);
-        }
-        return 0;
-    }
-
     private void showInfo(String title, String message) {
-        Alert alert = createStyledAlert(Alert.AlertType.INFORMATION, title, null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        AppDialogs.showInfo(getClass(), title, message);
     }
 
     private void showKeyboardShortcuts() {
-        Alert alert = createStyledAlert(Alert.AlertType.INFORMATION, "Keyboard Shortcuts", "⌨ Keyboard Shortcuts");
-
-        alert.setContentText("""
-                File:
-                • Ctrl+S          Save Progress
-                • Ctrl+Q          Exit
-
-                Edit:
-                • Ctrl+L          Clear Code
-                • Ctrl+R          Reset to Starter
-
-                View:
-                • Ctrl+Shift+D    Toggle Dark Mode
-                • Ctrl+1          Home
-                • Ctrl+2          Practice Workspace
-                • Ctrl+B          Toggle Sidebar
-                • Ctrl+=          Zoom In
-                • Ctrl+-          Zoom Out
-                • Ctrl+0          Reset Zoom
-
-                Run:
-                • F5              Run Tests
-                • Ctrl+Enter      Submit Solution
-
-                Help:
-                • Ctrl+H          Show Hint
-                • Ctrl+Shift+K    Keyboard Shortcuts
-                """);
-        alert.showAndWait();
+        AppDialogs.showKeyboardShortcuts(getClass());
     }
 
     private void saveProgress() {

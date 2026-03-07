@@ -12,7 +12,7 @@ module dev.philixtheexplorer.buggym {
     requires transitive org.fxmisc.flowless;
 
     requires java.compiler;
-    requires java.net.http;
+    requires transitive java.net.http;
 
     opens dev.philixtheexplorer.buggym to javafx.fxml;
     opens dev.philixtheexplorer.buggym.model to javafx.base;
