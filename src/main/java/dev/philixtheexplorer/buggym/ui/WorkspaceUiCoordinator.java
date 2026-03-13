@@ -1,6 +1,5 @@
 package dev.philixtheexplorer.buggym.ui;
 
-import dev.philixtheexplorer.buggym.application.AppController;
 import dev.philixtheexplorer.buggym.model.Category;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -13,9 +12,9 @@ import java.util.Collection;
  */
 public class WorkspaceUiCoordinator {
 
-    public void updateProgressLabel(Label progressLabel, AppController.ProgressSnapshot snapshot) {
+    public void updateProgressLabel(Label progressLabel, long solvedQuestions, long totalQuestions) {
         progressLabel.setText("Progress: %d/%d solved"
-                .formatted(snapshot.solvedQuestions(), snapshot.totalQuestions()));
+                .formatted(solvedQuestions, totalQuestions));
     }
 
     public void refreshHomeCategories(HomePageView homeContainer, Collection<Category> categories) {

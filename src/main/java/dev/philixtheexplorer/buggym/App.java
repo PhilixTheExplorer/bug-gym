@@ -20,15 +20,14 @@ import dev.philixtheexplorer.buggym.ui.MainMenuBarFactory;
 import dev.philixtheexplorer.buggym.ui.MainWorkspacePane;
 import dev.philixtheexplorer.buggym.ui.QuestionTreeView;
 import dev.philixtheexplorer.buggym.ui.ResultsPanel;
+import dev.philixtheexplorer.buggym.ui.SubmissionFeedbackCoordinator;
+import dev.philixtheexplorer.buggym.ui.UpdateFeedbackCoordinator;
 import dev.philixtheexplorer.buggym.ui.WorkspaceUiCoordinator;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
@@ -40,7 +39,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Bug Gym - A mini coding practice platform for Java beginners.
@@ -57,6 +55,8 @@ public class App extends Application {
     private UpdateService updateService;
     private UpdateCheckUseCase updateCheckUseCase;
     private WorkspaceUiCoordinator workspaceUiCoordinator;
+    private SubmissionFeedbackCoordinator submissionFeedbackCoordinator;
+    private UpdateFeedbackCoordinator updateFeedbackCoordinator;
 
     private QuestionTreeView questionTree;
     private WebView questionView;
@@ -86,6 +86,8 @@ public class App extends Application {
         updateService = new UpdateService();
         updateCheckUseCase = new UpdateCheckUseCase(updateService);
         workspaceUiCoordinator = new WorkspaceUiCoordinator();
+        submissionFeedbackCoordinator = new SubmissionFeedbackCoordinator();
+        updateFeedbackCoordinator = new UpdateFeedbackCoordinator();
 
         try {
             appController.loadQuestionsAndProgress();
@@ -187,7 +189,10 @@ public class App extends Application {
         }
 
         AppController.ProgressSnapshot snapshot = appController.getProgressSnapshot();
-        workspaceUiCoordinator.updateProgressLabel(progressLabel, snapshot);
+        workspaceUiCoordinator.updateProgressLabel(
+            progressLabel,
+            snapshot.solvedQuestions(),
+            snapshot.totalQuestions());
 
         if (homeContainer != null) {
             workspaceUiCoordinator.refreshHomeCategories(homeContainer, appController.getCategories());
@@ -311,24 +316,11 @@ public class App extends Application {
         questionTree.refreshQuestion(currentQuestion);
         updateProgress();
 
-        Alert alert = AppDialogs.createStyledAlert(getClass(), Alert.AlertType.INFORMATION,
-                "Congratulations!", "🎉 All tests passed!");
-        alert.setContentText("Great job! You've successfully solved this question.");
-
-        ButtonType nextQuestionBtn = new ButtonType("Next Question", ButtonBar.ButtonData.NEXT_FORWARD);
-        ButtonType stayBtn = new ButtonType("Stay Here", ButtonBar.ButtonData.CANCEL_CLOSE);
-
         Question nextQuestion = appController.getNextQuestion();
-        if (nextQuestion != null) {
-            alert.getButtonTypes().setAll(nextQuestionBtn, stayBtn);
-        } else {
-            alert.getButtonTypes().setAll(ButtonType.OK);
-        }
-
-        Optional<ButtonType> resultBtn = alert.showAndWait();
-        if (resultBtn.isPresent() && resultBtn.get() == nextQuestionBtn) {
-            questionTree.selectQuestion(nextQuestion);
-        }
+        submissionFeedbackCoordinator.showSuccessDialogAndHandleNext(
+                getClass(),
+                nextQuestion,
+                questionTree::selectQuestion);
     }
 
     private void runTests() {
@@ -400,34 +392,25 @@ public class App extends Application {
             UpdateCheckUseCase.UpdateCheckResult result = task.getValue();
 
             if (result.status() == UpdateCheckUseCase.Status.VERSION_UNAVAILABLE) {
-                if (!silent) {
-                    showInfo("Update Check", "Could not retrieve version info.");
-                }
+                updateFeedbackCoordinator.showVersionUnavailable(getClass(), silent);
                 return;
             }
 
             if (result.status() == UpdateCheckUseCase.Status.UPDATE_AVAILABLE) {
-                AppDialogs.showUpdateAvailable(getClass(), result.currentVersion(), result.latestVersion(),
+                updateFeedbackCoordinator.showUpdateAvailable(
+                        getClass(),
+                        result.currentVersion(),
+                        result.latestVersion(),
                         url -> getHostServices().showDocument(url));
                 return;
             }
 
-            if (!silent) {
-                showInfo("Up to Date", "You are running the latest version (v" + result.currentVersion() + ").");
-            }
+            updateFeedbackCoordinator.showUpToDate(getClass(), silent, result.currentVersion());
         });
 
-        task.setOnFailed(e -> {
-            if (!silent) {
-                showInfo("Update Check", "Could not check for updates.");
-            }
-        });
+        task.setOnFailed(e -> updateFeedbackCoordinator.handleFailure(getClass(), silent));
 
         taskRunner.run(task);
-    }
-
-    private void showInfo(String title, String message) {
-        AppDialogs.showInfo(getClass(), title, message);
     }
 
     private void showKeyboardShortcuts() {
