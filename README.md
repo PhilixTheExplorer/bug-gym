@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="./src/main/resources/icons/bug-gym.png" alt="BugGym Logo" width="200"/>
+<img src="./src/main/resources/icons/bug-gym.png" alt="Bug Gym Logo" width="200"/>
 <br/>
 <br/>
 
@@ -15,7 +15,15 @@
 
 ---
 
-**Bug Gym** is an offline Java practice desktop app that simulates Moodle-style exam questions with syntax highlighting, automated tests, and beginner-friendly progression. No login, No internet required, no complex IDE setup, just focused learning.
+**Bug Gym** is a lightweight, offline Java practice desktop app that simulates Moodle-style exam questions with syntax highlighting, automated tests, and beginner-friendly progression. No logins, no internet, and no complex IDE setups required. Just open the app and start practicing.
+
+At university (specifically KMUTT's SIT), students often take programming exams in stripped-down environments like Moodle or jGRASP. This creates an unfair gap for beginners:
+- **Moodle** is locked to exam time and its editor is a plain text box.
+- **jGRASP** lets you code but gives you zero practice questions.
+- **LeetCode / HackerRank** are overwhelming for beginners just trying to understand arrays.
+
+**Bug Gym bridges that gap.** It gives you realistic practice in a safe, offline space.  
+**Bug Gym = jGRASP's simplicity + Moodle's instant testing + beginner-friendly problem sets.**
 
 ## Screenshots
 
@@ -23,115 +31,81 @@
 
 ![Bug Gym Main Screen](screenshots/main-screen.png)
 
-## Supported platforms
+## Overview
 
-Windows • macOS • Linux
+Bug Gym runs purely locally on **Windows, macOS, and Linux**. No accounts, no internet, no cloud dependencies—just focused learning.
 
-## Installation (GitHub Releases)
+## Why Bug Gym
 
-1. Open the [Releases](https://github.com/PhilixTheExplorer/bug-gym/releases) page for this repository.
-2. Download the installer or archive for your operating system.
-3. Install or extract, then launch the application.
+- **Exam-Realistic Practice:** Moodle-style Java questions designed for beginner-friendly progression.
+- **Intentionally Started Like jGRASP:** The editor began in a strict, minimal style (manual indentation/brackets) to match third-year exam habits, then evolved with *toggleable* Auto Indent and Auto Bracket Pairing based on learner feedback.
+- **Zero Friction:** Offline-first desktop workflow with no login, no internet, and no complex IDE setup.
+- **Instant Validation:** Built-in automated tests with clear pass/fail status and mismatch feedback.
+- **Content That Teaches:** Markdown-based question packs with hints, examples, and starter code.
+- **Visible Progress:** Local progress tracking so you can see growth over time.
+
+For the full walkthrough, see [FEATURES.md](FEATURES.md).
+
+## Quick Start
+
+### Install from Releases
+
+1. Head over to the [Releases](https://github.com/PhilixTheExplorer/bug-gym/releases) page.
+2. Download the installer for your OS.
+3. Install, launch, and start coding.
 
 ### Security Notice (Unsigned Installers)
 
 Bug Gym is an open-source project without paid code-signing certificates. Your OS may show warnings:
 
-- **macOS**: Right-click → Open, then confirm
+- **macOS**: Go to System Settings → Privacy & Security → allow Bug Gym to "Open Anyway"
 - **Windows**: Click "More Info" → "Run Anyway"
 
 **If you downloaded from the official GitHub Releases page, it's safe.**
 
-## The Problem
-
-**At KMUTT's School of Information Technology (SIT)**, students take Java programming exams through Moodle:
-- Moodle is locked to exam time — **no official practice questions**
-- Moodle editor = plain text box (no highlighting, no line numbers)
-- jGRASP lets you write code but **gives you zero questions to solve**
-- LeetCode / HackerRank feel impossible for beginners (too many concepts at once)
-- Beginners need **structured, exam-like practice** — but most options are either too basic (just syntax) or way too hard
-
-**Bug Gym** gives you that missing bridge: realistic practice in a safe, offline space.
-
-## What Bug Gym Provides
-
-**Built for exam practice** - Simulates Moodle-style questions offline  
-**Markdown problem descriptions** - Clear, readable questions with hints  
-**Automated test execution** - Run tests immediately, see what's wrong  
-**Offline-first** - Practice anywhere without internet  
-**Super beginner friendly** - Questions start from "Hello World" level  
-**Open Content Structure** - All questions written in Markdown files (easy to add / modify via source)  
-**Progress tracking** - See what you've completed  
-**Intentionally minimal feature set** - Just code, test, learn 
-
-## Who Is This For?
-
-- **Students** learning Java in introductory CS courses
-- **Educators** who want to create custom practice problems
-- **Self-learners** who need structured practice without Moodle
-- **Schools** that want an offline alternative for lab exercises
-
-## Comparison
-
-| Feature | Bug Gym | Moodle | jGRASP | LeetCode | VS Code |
-|---------|---------|--------|--------|----------|---------|
-| **Syntax highlighting** | ✅ | ❌ | ✅ | ✅ | ✅ |
-| **Offline practice** | ✅ | ❌ | ✅ | ❌ | ✅ |
-| **Beginner problems** | ✅ | Admin dependent | ❌ | Limited (mostly interview-level) | ❌ |
-| **Automated testing** | ✅ | ✅ | ❌ | ✅ | Manual |
-| **Simple interface** | ✅ | ✅ | ✅ | 🟨 | ❌ |
-| **Custom challenges** | ✅ (Via Source) | Admin only | ❌ | ❌ | ❌ |
-| **Exam-style practice** | ✅ | ✅ | ❌ | ❌ | ❌ |
-
-**Bug Gym = jGRASP's simplicity + Moodle's testing + beginner-friendly problem sets**
-
-## Features in Detail
-
-### Code Editor
-- **Java syntax highlighting** using RichTextFX
-- **Line numbers** for easy reference
-- **Keyboard shortcuts** 
-
-### Problem View
-- **Markdown support** with tables, code blocks, formatting
-- **Hint system** to help when stuck
-- **Example inputs/outputs** for clarity
-
-### Test Runner
-- **Automated compilation** and execution
-- **Input/output comparison** to show differences
-- **Clear error messages** when tests fail
-- **Progress indicators** showing what passed
-
-### User Experience
-- Dark/Light mode
-- Adjustable font size
-- Resizable layout
-- Works offline (practice anywhere)
-- Progress tracking
-
-## Building from Source
+## Build From Source
 
 ### Requirements
+
 - Java 21+ ([Download OpenJDK](https://adoptium.net/))
 - Maven 3.8+ ([Download Maven](https://maven.apache.org/download.cgi))
 
-### Build & Run
+### Run
+
 ```bash
-# Clone repository
 git clone https://github.com/PhilixTheExplorer/bug-gym.git
 cd bug-gym
-
-# Run application
 mvn clean javafx:run
-
-# Build JAR
-mvn clean package
-# Output: target/bug-gym-1.0.0.jar
-
-# Build native installer (requires platform-specific tools)
-# See .github/workflows/release.yml for details
 ```
+
+### Package
+
+```bash
+mvn clean package
+```
+
+### VS Code (Optional)
+
+If you use VS Code, both are supported:
+
+- Java General profile
+- Run and debug directly in VS Code
+
+Recommended extensions:
+
+- Extension Pack for Java
+- Debugger for Java
+
+Launch/debug main class:
+
+- `dev.philixtheexplorer.buggym.Launcher`
+
+## Documentation
+
+- [FEATURES.md](FEATURES.md) : full feature breakdown
+- [ARCHITECTURE.md](ARCHITECTURE.md) : project structure and design
+- [CONTRIBUTING.md](CONTRIBUTING.md) : contribution workflow and standards
+- [CHANGELOG.md](CHANGELOG.md) : release history
 
 ## Why This Started
 
