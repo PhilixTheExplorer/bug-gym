@@ -3,6 +3,7 @@ package dev.philixtheexplorer.buggym.ui;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.control.IndexRange;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -18,6 +19,8 @@ import java.util.regex.Pattern;
  * A syntax-highlighted code editor for Java code using RichTextFX.
  */
 public class CodeEditor extends StackPane {
+
+    private static final String INDENT = "    ";
 
     private static final String[] KEYWORDS = new String[] {
             "abstract", "assert", "boolean", "break", "byte",
@@ -58,6 +61,8 @@ public class CodeEditor extends StackPane {
 
     private final CodeArea codeArea;
     private int fontSize = 14;
+    private boolean autoIndentEnabled = true;
+    private boolean autoBracketPairingEnabled = true;
 
     public CodeEditor() {
         this.codeArea = new CodeArea();
@@ -70,7 +75,7 @@ public class CodeEditor extends StackPane {
                 .successionEnds(Duration.ofMillis(100))
                 .subscribe(ignore -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
 
-        // Handle tab key for indentation
+        // Handle tab key for indentation and Enter key for auto indent
         codeArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.TAB) {
                 if (event.isShiftDown()) {
@@ -78,9 +83,33 @@ public class CodeEditor extends StackPane {
                     removeIndentation();
                 } else {
                     // Tab: Add indentation
-                    codeArea.insertText(codeArea.getCaretPosition(), "    ");
+                    codeArea.insertText(codeArea.getCaretPosition(), INDENT);
                 }
                 event.consume();
+            } else if (event.getCode() == KeyCode.ENTER && autoIndentEnabled) {
+                handleAutoIndentOnEnter();
+                event.consume();
+            }
+        });
+
+        codeArea.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (!autoBracketPairingEnabled || event.isControlDown() || event.isAltDown() || event.isMetaDown()) {
+                return;
+            }
+
+            String typed = event.getCharacter();
+            if (typed == null || typed.isEmpty()) {
+                return;
+            }
+
+            char ch = typed.charAt(0);
+            if (isOpeningBracket(ch)) {
+                handleOpeningBracket(ch);
+                event.consume();
+            } else if (isClosingBracket(ch)) {
+                if (skipExistingClosingBracket(ch)) {
+                    event.consume();
+                }
             }
         });
 
@@ -128,6 +157,98 @@ public class CodeEditor extends StackPane {
         } else if (lineText.startsWith("\t")) {
             codeArea.deleteText(lineStart, lineStart + 1);
         }
+    }
+
+    private void handleAutoIndentOnEnter() {
+        int caretPos = codeArea.getCaretPosition();
+        String text = codeArea.getText();
+
+        int lineStart = text.lastIndexOf('\n', Math.max(0, caretPos - 1)) + 1;
+        String lineBeforeCaret = text.substring(lineStart, caretPos);
+        String baseIndent = leadingWhitespace(lineBeforeCaret);
+        boolean opensBlock = lineBeforeCaret.stripTrailing().endsWith("{");
+        char nextVisibleChar = nextNonWhitespaceChar(text, caretPos);
+
+        if (opensBlock && nextVisibleChar == '}') {
+            String insertion = "\n" + baseIndent + INDENT + "\n" + baseIndent;
+            codeArea.insertText(caretPos, insertion);
+            codeArea.moveTo(caretPos + 1 + baseIndent.length() + INDENT.length());
+            return;
+        }
+
+        String indentToInsert = baseIndent;
+        if (opensBlock) {
+            indentToInsert += INDENT;
+        }
+
+        codeArea.insertText(caretPos, "\n" + indentToInsert);
+        codeArea.moveTo(caretPos + 1 + indentToInsert.length());
+    }
+
+    private void handleOpeningBracket(char opening) {
+        char closing = matchingBracket(opening);
+        IndexRange selection = codeArea.getSelection();
+
+        if (selection.getLength() > 0) {
+            String selectedText = codeArea.getSelectedText();
+            codeArea.replaceText(selection.getStart(), selection.getEnd(), "" + opening + selectedText + closing);
+            codeArea.selectRange(selection.getStart() + 1, selection.getEnd() + 1);
+            return;
+        }
+
+        int caretPos = codeArea.getCaretPosition();
+        codeArea.insertText(caretPos, "" + opening + closing);
+        codeArea.moveTo(caretPos + 1);
+    }
+
+    private boolean skipExistingClosingBracket(char typedClosing) {
+        if (codeArea.getSelection().getLength() > 0) {
+            return false;
+        }
+
+        int caretPos = codeArea.getCaretPosition();
+        String text = codeArea.getText();
+        if (caretPos < text.length() && text.charAt(caretPos) == typedClosing) {
+            codeArea.moveTo(caretPos + 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean isOpeningBracket(char c) {
+        return c == '(' || c == '{' || c == '[';
+    }
+
+    private static boolean isClosingBracket(char c) {
+        return c == ')' || c == '}' || c == ']';
+    }
+
+    private static char matchingBracket(char opening) {
+        return switch (opening) {
+            case '(' -> ')';
+            case '{' -> '}';
+            case '[' -> ']';
+            default -> opening;
+        };
+    }
+
+    private static String leadingWhitespace(String text) {
+        int index = 0;
+        while (index < text.length() && Character.isWhitespace(text.charAt(index))) {
+            index++;
+        }
+        return text.substring(0, index);
+    }
+
+    private static char nextNonWhitespaceChar(String text, int startIndex) {
+        for (int i = startIndex; i < text.length(); i++) {
+            char current = text.charAt(i);
+            if (!Character.isWhitespace(current)) {
+                return current;
+            }
+        }
+        return '\0';
     }
 
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
@@ -178,5 +299,13 @@ public class CodeEditor extends StackPane {
 
     public void setEditable(boolean editable) {
         codeArea.setEditable(editable);
+    }
+
+    public void setAutoIndentEnabled(boolean autoIndentEnabled) {
+        this.autoIndentEnabled = autoIndentEnabled;
+    }
+
+    public void setAutoBracketPairingEnabled(boolean autoBracketPairingEnabled) {
+        this.autoBracketPairingEnabled = autoBracketPairingEnabled;
     }
 }

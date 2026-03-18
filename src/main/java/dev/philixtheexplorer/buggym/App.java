@@ -80,7 +80,8 @@ public class App extends Application {
 
         AppInteractionFactory.Callbacks callbacks = createInteractionCallbacks();
 
-        MenuBar menuBar = AppInteractionFactory.createMenuBar(runtime.appController().getCategories(), darkMode, callbacks);
+        MenuBar menuBar = AppInteractionFactory.createMenuBar(runtime.appController().getCategories(), darkMode,
+                callbacks);
         root.setTop(menuBar);
 
         workspacePane = AppInteractionFactory.createWorkspacePane(runtime.appController().getCategories(), callbacks);
@@ -110,6 +111,8 @@ public class App extends Application {
                 this::clearCode,
                 this::resetToStarter,
                 this::toggleDarkMode,
+                this::toggleAutoIndent,
+                this::toggleAutoBracketPairing,
                 this::showHomePage,
                 this::showPracticePage,
                 this::toggleSidebar,
@@ -140,12 +143,13 @@ public class App extends Application {
 
         AppController.ProgressSnapshot snapshot = runtime.appController().getProgressSnapshot();
         runtime.workspaceUiCoordinator().updateProgressLabel(
-            progressLabel,
-            snapshot.solvedQuestions(),
-            snapshot.totalQuestions());
+                progressLabel,
+                snapshot.solvedQuestions(),
+                snapshot.totalQuestions());
 
         if (homeContainer != null) {
-            runtime.workspaceUiCoordinator().refreshHomeCategories(homeContainer, runtime.appController().getCategories());
+            runtime.workspaceUiCoordinator().refreshHomeCategories(homeContainer,
+                    runtime.appController().getCategories());
         }
     }
 
@@ -160,7 +164,8 @@ public class App extends Application {
             return;
         }
 
-        runtime.workspaceUiCoordinator().showHomePage(homeContainer, mainContentSplit, runtime.appController().getCategories());
+        runtime.workspaceUiCoordinator().showHomePage(homeContainer, mainContentSplit,
+                runtime.appController().getCategories());
     }
 
     private void showPracticePage() {
@@ -210,7 +215,8 @@ public class App extends Application {
     }
 
     private void navigateQuestion(int direction) {
-        runtime.sessionFlowCoordinator().navigateQuestion(direction, this::selectFirstQuestion, questionTree::selectQuestion);
+        runtime.sessionFlowCoordinator().navigateQuestion(direction, this::selectFirstQuestion,
+                questionTree::selectQuestion);
     }
 
     private void executeCodeRun(boolean isSubmission) {
@@ -303,6 +309,18 @@ public class App extends Application {
         if (currentQuestion != null) {
             String html = runtime.appController().getQuestionHtml(currentQuestion, darkMode);
             questionView.getEngine().loadContent(html);
+        }
+    }
+
+    private void toggleAutoIndent(boolean enabled) {
+        if (codeEditor != null) {
+            codeEditor.setAutoIndentEnabled(enabled);
+        }
+    }
+
+    private void toggleAutoBracketPairing(boolean enabled) {
+        if (codeEditor != null) {
+            codeEditor.setAutoBracketPairingEnabled(enabled);
         }
     }
 

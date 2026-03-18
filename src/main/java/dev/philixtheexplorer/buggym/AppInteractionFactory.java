@@ -18,7 +18,7 @@ final class AppInteractionFactory {
     private AppInteractionFactory() {
     }
 
-        static MenuBar createMenuBar(Collection<Category> categories, boolean darkMode, Callbacks callbacks) {
+    static MenuBar createMenuBar(Collection<Category> categories, boolean darkMode, Callbacks callbacks) {
         return MainMenuBarFactory.create(categories, darkMode,
                 new MainMenuBarFactory.Actions(
                         callbacks.onSaveProgress(),
@@ -26,6 +26,8 @@ final class AppInteractionFactory {
                         callbacks.onClearCode(),
                         callbacks.onResetToStarter(),
                         callbacks.onToggleDarkMode(),
+                        callbacks.onToggleAutoIndent(),
+                        callbacks.onToggleAutoBracketPairing(),
                         callbacks.onShowHome(),
                         callbacks.onShowPractice(),
                         callbacks.onToggleSidebar(),
@@ -41,7 +43,7 @@ final class AppInteractionFactory {
                         callbacks.onShowAbout()));
     }
 
-        static MainWorkspacePane createWorkspacePane(Collection<Category> categories, Callbacks callbacks) {
+    static MainWorkspacePane createWorkspacePane(Collection<Category> categories, Callbacks callbacks) {
         return new MainWorkspacePane(
                 categories,
                 callbacks.onQuestionSelected(),
@@ -53,11 +55,13 @@ final class AppInteractionFactory {
                 callbacks.onShowHint());
     }
 
-        record Callbacks(
+    record Callbacks(
             Runnable onSaveProgress,
             Runnable onClearCode,
             Runnable onResetToStarter,
             Consumer<Boolean> onToggleDarkMode,
+            Consumer<Boolean> onToggleAutoIndent,
+            Consumer<Boolean> onToggleAutoBracketPairing,
             Runnable onShowHome,
             Runnable onShowPractice,
             Runnable onToggleSidebar,
@@ -72,7 +76,6 @@ final class AppInteractionFactory {
             Runnable onCheckForUpdates,
             Runnable onShowAbout,
             Consumer<Question> onQuestionSelected,
-            Consumer<Integer> onNavigateQuestion
-    ) {
+            Consumer<Integer> onNavigateQuestion) {
     }
 }

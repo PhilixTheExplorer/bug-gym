@@ -25,6 +25,8 @@ public final class MainMenuBarFactory {
             Runnable onClearCode,
             Runnable onResetToStarter,
             Consumer<Boolean> onToggleDarkMode,
+            Consumer<Boolean> onToggleAutoIndent,
+            Consumer<Boolean> onToggleAutoBracketPairing,
             Runnable onShowHome,
             Runnable onShowPractice,
             Runnable onToggleSidebar,
@@ -37,8 +39,7 @@ public final class MainMenuBarFactory {
             Runnable onShowHint,
             Runnable onShowKeyboardShortcuts,
             Runnable onCheckUpdates,
-            Runnable onShowAbout
-    ) {
+            Runnable onShowAbout) {
     }
 
     public static MenuBar create(Collection<Category> categories, boolean darkMode, Actions actions) {
@@ -103,6 +104,18 @@ public final class MainMenuBarFactory {
 
         viewMenu.getItems().addAll(zoomInItem, zoomOutItem, resetZoomItem);
 
+        Menu settingsMenu = new Menu("Settings");
+        CheckMenuItem autoIndentItem = new CheckMenuItem("Auto Indent");
+        autoIndentItem.setSelected(true);
+        autoIndentItem.setOnAction(e -> actions.onToggleAutoIndent().accept(autoIndentItem.isSelected()));
+
+        CheckMenuItem autoBracketPairingItem = new CheckMenuItem("Auto Bracket Pairing");
+        autoBracketPairingItem.setSelected(true);
+        autoBracketPairingItem.setOnAction(
+                e -> actions.onToggleAutoBracketPairing().accept(autoBracketPairingItem.isSelected()));
+
+        settingsMenu.getItems().addAll(autoIndentItem, autoBracketPairingItem);
+
         Menu runMenu = new Menu("Run");
         MenuItem runTestsItem = new MenuItem("Run Tests");
         runTestsItem.setAccelerator(new KeyCodeCombination(KeyCode.F5));
@@ -143,9 +156,11 @@ public final class MainMenuBarFactory {
         MenuItem aboutItem = new MenuItem("About BugGym");
         aboutItem.setOnAction(e -> actions.onShowAbout().run());
 
-        helpMenu.getItems().addAll(showHintItem, keyboardShortcutsItem, new SeparatorMenuItem(), checkUpdatesItem, aboutItem);
+        helpMenu.getItems().addAll(showHintItem, keyboardShortcutsItem, new SeparatorMenuItem(), checkUpdatesItem,
+                aboutItem);
 
-        menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu, runMenu, categoriesMenu, quickHomeMenu, helpMenu);
+        menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu, settingsMenu, runMenu, categoriesMenu, quickHomeMenu,
+                helpMenu);
         return menuBar;
     }
 }
