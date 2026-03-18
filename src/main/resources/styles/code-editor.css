@@ -35,12 +35,13 @@
 .code-area .lineno {
     -fx-background-color: #1e1e1e;
     -fx-fill: #858585;
-    -fx-font-size: 13px;
-    -fx-padding: 0 10px 0 5px;
+    -fx-font-size: 1em;
+    -fx-alignment: center-right;
+    -fx-padding: 0 0.9em 0 0.45em;
 }
 
 .code-area .paragraph-box .lineno {
-    -fx-padding: 0 10px 0 5px;
+    -fx-padding: 0 0.9em 0 0.45em;
 }
 
 /* Syntax highlighting classes */
