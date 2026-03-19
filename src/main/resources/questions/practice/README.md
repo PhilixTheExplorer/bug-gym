@@ -178,3 +178,27 @@ This repository contains a collection of beginner-friendly Java practice questio
 - [Question 6](13-mini-mock-set-2/Question6.md): **Armstrong Range** (Digit math + powers)
 - [Question 7](13-mini-mock-set-2/Question7.md): **Min Swaps for Grouping** (Sliding-window style counting)
 - [Question 8](13-mini-mock-set-2/Question8.md): **Balanced Distinct Split** (Prefix/suffix distinct tracking)
+
+## 14. OOP Progression
+*Entry OOP set that gradually introduces classes, composition, inheritance, polymorphism, interfaces, and object sorting.*
+
+- [Question 1](14-oop-progression/Question1.md): **Student Pass Check** (Class fields, constructor, getters/setters)
+- [Question 2](14-oop-progression/Question2.md): **Owner-Pet List** (Composition with ArrayList + duplicate control)
+- [Question 3](14-oop-progression/Question3.md): **Employee Payment** (Abstract class + inheritance + polymorphism)
+- [Question 4](14-oop-progression/Question4.md): **Payable System** (Interface with multiple implementations)
+- [Question 5](14-oop-progression/Question5.md): **Energy Devices** (Overriding with state updates)
+- [Question 6](14-oop-progression/Question6.md): **Player Ranking** (Comparable and tie-break sorting)
+- [Question 7](14-oop-progression/Question7.md): **Playlist Composition** (ArrayList add/remove + for-loop reporting)
+- [Question 8](14-oop-progression/Question8.md): **Classroom Aggregation** (Unique enroll/drop + roster loop)
+
+## 15. OOP Core Concepts
+*Focused OOP practice for encapsulation, overloading, static/final, abstract classes, interfaces, overriding, and ArrayList collaboration.*
+
+- [Question 1](15-oop-core-concepts/Question1.md): **Wallet Encapsulation** (Private fields + guarded updates)
+- [Question 2](15-oop-core-concepts/Question2.md): **Box Overloading** (Constructor overloading)
+- [Question 3](15-oop-core-concepts/Question3.md): **Member Static/Final** (Static ID generation + final constant)
+- [Question 4](15-oop-core-concepts/Question4.md): **Shape Areas** (Abstract class + method overriding)
+- [Question 5](15-oop-core-concepts/Question5.md): **Discount Interface** (Interface-driven behavior)
+- [Question 6](15-oop-core-concepts/Question6.md): **Sprint Costing** (ArrayList + abstract/final method design)
+- [Question 7](15-oop-core-concepts/Question7.md): **Order Composition** (Merge duplicates + remove + total)
+- [Question 8](15-oop-core-concepts/Question8.md): **Company Aggregation** (ArrayList + interface policy + payroll)
