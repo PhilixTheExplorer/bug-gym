@@ -3,9 +3,9 @@ Given a Car class and a driver class called CarCaller, please complete a Car cla
 
 A Car class should contains the data of car id (int), brand (String), color (String), the name of owner (String), and total driving distance (double). Each data should have getter and setter methods. It should provide at least two constructors: (i) a constructor taking only id as input and (ii) a constructor taking inputs for all attributes (i.e., id, brand, color, and owner name). It also has a method called drive which takes an input of driving distance as double. For each drive, the drive method will accumulate total driving distance for a car. The method getTotalDrivingDist must return total driving distance of a car.
 
-| **Expected**  |
-|:--------------|
-|----- car1 Info -----<br>id: 15012016 brand: Lamborghini Veneno color: Black owner: James total driving distance: 135.0 <br>----- car2 Info ----- <br>id: 20022011 brand: Jajuar XKR-S color: Blue owner: Paul total driving distance: 350.0 <br>----- car3 Info ----- <br>id: 11112015 brand: Mercedes-AMG GT color: Yello owner: Smith total driving distance: 0.0|
+| **Input**     | **Result** |
+|:--------------|:-----------|
+||----- car1 Info -----<br>id: 15012016 brand: Lamborghini Veneno color: Black owner: James total driving distance: 135.0 <br>----- car2 Info ----- <br>id: 20022011 brand: Jajuar XKR-S color: Blue owner: Paul total driving distance: 350.0 <br>----- car3 Info ----- <br>id: 11112015 brand: Mercedes-AMG GT color: Yello owner: Smith total driving distance: 0.0|
 
 ### Starter Code
 

@@ -37,9 +37,9 @@ When a character defeats the enemy (i.e., healthPoint <= 0), it should print (pr
 
 The driver class of *Tester* is provided in the answer box for testing the game system. Please do not modify the driver class since your output may be incorrect.
 
-| **Expected**  |
-|:--------------|
-|--------------------------------<br>Player: Float<br>Player Id: 0<br>Level: 1 Money: 10<br>--------------------------------<br>Player: BABA<br>Player Id: 1<br>Level: 1 Money: 10<br>--------------------------------<br>You do not own any character<br>You do not have enough money<br>--------------------------------<br>Player: Float<br>Player Id: 0<br>Level: 1 Money: 5<br>--------------------------------<br>Character: Beidou Level: 1<br>--------------------------------<br>Player: Float<br>Player Id: 0<br>Level: 6 Money: 15<br>--------------------------------<br>10.0<br>2.4000000000000004<br>You defeated an enemy<br>--------------------------------<br>You do not own this character<br>Beidou<br>Zhong Li<br>--------------------------------<br>Enemy Health: 5.0<br>Character: Zhong Li Level: 11<br>You defeated an enemy<br>Character: Zhong Li Level: 12<br>--------------------------------<br>The rank of this character are not supported|
+| **Input**     | **Result** |
+|:--------------|:-----------|
+||--------------------------------<br>Player: Float<br>Player Id: 0<br>Level: 1 Money: 10<br>--------------------------------<br>Player: BABA<br>Player Id: 1<br>Level: 1 Money: 10<br>--------------------------------<br>You do not own any character<br>You do not have enough money<br>--------------------------------<br>Player: Float<br>Player Id: 0<br>Level: 1 Money: 5<br>--------------------------------<br>Character: Beidou Level: 1<br>--------------------------------<br>Player: Float<br>Player Id: 0<br>Level: 6 Money: 15<br>--------------------------------<br>10.0<br>2.4000000000000004<br>You defeated an enemy<br>--------------------------------<br>You do not own this character<br>Beidou<br>Zhong Li<br>--------------------------------<br>Enemy Health: 5.0<br>Character: Zhong Li Level: 11<br>You defeated an enemy<br>Character: Zhong Li Level: 12<br>--------------------------------<br>The rank of this character are not supported|
 
 ### Starter Code
 

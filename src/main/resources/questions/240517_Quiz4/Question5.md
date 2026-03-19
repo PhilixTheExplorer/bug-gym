@@ -65,6 +65,6 @@ class MacBookPro {
 
 ### For example:
 
-| **Expected** |
-| :----------- |
-|-----------MacBook Pro 1----------- <br> MBP1, Memory: 16 GB<br>MBP1, CPU: 8 Cores<br>MBP1, GPU: 14 Cores<br>MBP1, NeuralEngine: 16 Cores<br>MBP1, MaxMemory: 32 GB<br>MBP1, Memory: 32 GB<br>ERROR<br>MBP1, Memory: 32 GB<br>-----------MacBook Pro 2-----------<br>MBP2, Memory: 16 GB<br>MBP2, CPU: 10 Cores<br>MBP2, GPU: 24 Cores<br>MBP2, NeuralEngine: 16 Cores<br>MBP2, MaxMemory: 64 GB<br>MBP2, Memory: 64 GB|
+| **Input**     | **Result** |
+|:--------------|:-----------|
+||-----------MacBook Pro 1----------- <br> MBP1, Memory: 16 GB<br>MBP1, CPU: 8 Cores<br>MBP1, GPU: 14 Cores<br>MBP1, NeuralEngine: 16 Cores<br>MBP1, MaxMemory: 32 GB<br>MBP1, Memory: 32 GB<br>ERROR<br>MBP1, Memory: 32 GB<br>-----------MacBook Pro 2-----------<br>MBP2, Memory: 16 GB<br>MBP2, CPU: 10 Cores<br>MBP2, GPU: 24 Cores<br>MBP2, NeuralEngine: 16 Cores<br>MBP2, MaxMemory: 64 GB<br>MBP2, Memory: 64 GB|
