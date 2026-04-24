@@ -19,7 +19,6 @@ Hello Java
 2
 E T
 A R
-
 ```
 
 **The output is:**
@@ -36,3 +35,6 @@ A R
 | **Input** | **Result** |
 | --- | --- |
 | Hello Java <br> 2 <br> E T <br> A R | RVRJ OLLTH |
+| test string <br> 0 | GNIRTS TSET |
+| 123 abc! <br> 1 <br> B X | !CXA 321 |
+| x <br> 1 <br> X Y | Y |

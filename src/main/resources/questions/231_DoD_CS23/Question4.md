@@ -21,3 +21,6 @@ Your task is to write a program to count the number of destroyed cells in the fi
 | **Input** | **Result** |
 | --- | --- |
 | 2 <br> 4 3 <br> 8 8 | 18 |
+| 0 | 0 |
+| 1 <br> 0 0 | 4 |
+| 2 <br> 0 0 <br> 0 1 | 6 |

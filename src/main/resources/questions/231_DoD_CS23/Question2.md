@@ -12,3 +12,6 @@ The input is a number of words in a sentence and the sentence itself. The output
 | **Input** | **Result** |
 | --- | --- |
 | 15 <br> Java applications are typically compiled to bytecode that can run on any Java virtual machine | AVAJ snoitacilppa ERA yllacipyt DELIPMOC ot EDOCETYB taht NAC nur NO yna AVAJ lautriv ENIHCAM |
+| 1 <br> hElLo | OLLEH |
+| 2 <br> HeLLO wOrLd | OLLEH dlrow |
+| 3 <br> 123 !@# aBc | 321 #@! CBA |

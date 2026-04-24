@@ -11,19 +11,19 @@ public class VehicleTester {
         String carBrand = sc.next();
         String carModel = sc.next();
         String carColor = sc.next();
-        double consumptionRate = sc.nextDouble();
+        int consumptionRate = sc.nextInt();
 
         String bicycleBrand = sc.next();
         String bicycleModel = sc.next();
         String bicycleColor = sc.next();
 
-        double carSpeed = sc.nextDouble();
-        double carDistance = sc.nextDouble();
-        double bicycleSpeed = sc.nextDouble();
-        double bicycleDistance = sc.nextDouble();
+        int carSpeed = sc.nextInt();
+        int carDistance = sc.nextInt();
+        int bicycleSpeed = sc.nextInt();
+        int bicycleDistance = sc.nextInt();
 
         Owner owner = new Owner(ownerName);
-        Car car = new Car(carId, carBrand, carModel, carColor, consumptionRate);
+        Car car = new Car(carBrand, carId, carModel, carColor, consumptionRate);
         Bicycle bicycle = new Bicycle(bicycleBrand, bicycleModel, bicycleColor);
 
         owner.addVehicle(car);
@@ -53,19 +53,23 @@ class Owner {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public ArrayList<Vehicle> getVehicles() {
         return vehicles;
     }
 
-    public void addVehicle(Vehicle v) {
-        if (!vehicles.contains(v)) {
-            vehicles.add(v);
+    public void addVehicle(Vehicle vehicle) {
+        if (!vehicles.contains(vehicle)) {
+            vehicles.add(vehicle);
         }
     }
 
-    public void move(Vehicle v, double speed, double distance) {
-        if (vehicles.contains(v)) {
-            v.move(speed, distance);
+    public void move(Vehicle vehicle, int speed, int distance) {
+        if (vehicles.contains(vehicle)) {
+            vehicle.move(speed, distance);
         }
     }
 }
@@ -75,14 +79,14 @@ abstract class Vehicle {
     private String type;
     private String model;
     private String color;
-    private double totalDistance;
+    private int accumulative_distance;
 
     public Vehicle(String brand, String type, String model, String color) {
         this.brand = brand;
         this.type = type;
         this.model = model;
         this.color = color;
-        this.totalDistance = 0;
+        this.accumulative_distance = 0;
     }
 
     public String getBrand() {
@@ -93,10 +97,6 @@ abstract class Vehicle {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getModel() {
         return model;
     }
@@ -105,62 +105,71 @@ abstract class Vehicle {
         return color;
     }
 
-    public double getTotalDistance() {
-        return totalDistance;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public void setTotalDistance(double totalDistance) {
-        this.totalDistance = totalDistance;
+    public int getAccumulative_distance() {
+        return accumulative_distance;
+    }
+
+    public void setAccumulative_distance(int accumulative_distance) {
+        this.accumulative_distance = accumulative_distance;
     }
 
     public void printInfo() {
+        System.out.println("--- Vehicle Info ---");
         System.out.println("Type: " + type
-                + " Brand: " + brand
-                + " Model: " + model
-                + " Color: " + color
-                + " Total Distance: " + totalDistance);
+                + "\nBrand: " + brand
+                + "\nModel: " + model
+                + "\nColor: " + color
+                + "\nAccumulative Distance: " + accumulative_distance);
     }
 
-    public abstract void move(double speed, double distance);
+    public abstract void move(int speed, int distance);
 }
 
 class Car extends Vehicle {
     private int id;
-    private double consumptionRate;
-    private double powerConsumption;
+    private int consumption_rate;
+    private int power_consumption;
 
-    public Car(int id, String brand, String model, String color, double consumptionRate) {
+    public Car(String brand, int id, String model, String color, int consumption_rate) {
         super(brand, "Car", model, color);
         this.id = id;
-        this.consumptionRate = consumptionRate;
-        this.powerConsumption = 0;
+        this.consumption_rate = consumption_rate;
+        this.power_consumption = 0;
     }
 
     public int getId() {
         return id;
     }
 
-    public double getConsumptionRate() {
-        return consumptionRate;
+    public int getConsumption_rate() {
+        return consumption_rate;
     }
 
-    public double getPowerConsumption() {
-        return powerConsumption;
+    public void setConsumption_rate(int consumption_rate) {
+        this.consumption_rate = consumption_rate;
+    }
+
+    public int getPower_consumption() {
+        return power_consumption;
     }
 
     @Override
-    public void move(double speed, double distance) {
+    public void move(int speed, int distance) {
         if (speed == 0) {
             return;
         }
-        setTotalDistance(getTotalDistance() + distance);
-        powerConsumption += distance / consumptionRate;
+        setAccumulative_distance(getAccumulative_distance() + distance);
+        power_consumption += distance / consumption_rate;
     }
 
     @Override
     public void printInfo() {
         super.printInfo();
-        System.out.println("Power Consumption: " + powerConsumption);
+        System.out.println("Power Consumption: " + power_consumption);
     }
 }
 
@@ -170,10 +179,10 @@ class Bicycle extends Vehicle {
     }
 
     @Override
-    public void move(double speed, double distance) {
+    public void move(int speed, int distance) {
         if (speed == 0) {
             return;
         }
-        setTotalDistance(getTotalDistance() + distance);
+        setAccumulative_distance(getAccumulative_distance() + distance);
     }
 }

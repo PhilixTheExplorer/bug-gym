@@ -12,3 +12,6 @@ Write a program to add digits from a given 9-digit number according to the follo
 | **Input** | **Result** |
 | --- | --- |
 | 214532369 | 14 |
+| 123445678 | 22 |
+| 909000909 | 36 |
+| 000010000 | 0 |
