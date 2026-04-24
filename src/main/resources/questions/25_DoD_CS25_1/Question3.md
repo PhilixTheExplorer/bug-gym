@@ -25,3 +25,7 @@ Write a program to swap elements in the given list of number such that odd numbe
 | **Input** | **Result** |
 | --- | --- |
 | 6 <br> 9 7 6 4 5 2 | 5 7 2 4 9 6 |
+| 4 <br> 8 6 4 2 | 2 4 6 8 |
+| 3 <br> 5 3 1 | 1 3 5 |
+| 1 <br> 10 | 10 |
+| 5 <br> -1 -2 -3 -4 -5 | -5 -4 -3 -2 -1 |
