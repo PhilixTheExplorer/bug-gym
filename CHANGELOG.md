@@ -5,6 +5,23 @@ All notable changes to BugGym will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.2.1] - 2026-07-01
+
+### Added
+- GitHub issue templates for bug reports and feature requests.
+- GitHub pull request template.
+- Additional edge-case and boundary examples for DoD CS23 and DoD CS25 question sets.
+
+### Changed
+- Updated README with a demo link and refreshed main screen screenshot.
+- Refined `25_DoD_CS25_1` question wording and `VehicleTester` formatting.
+
+### Fixed
+- Aligned `25_DoD_CS25_1` Question 5 starter code and markdown with the UML.
+- Corrected `240126_Lab2` Question 3 markdown wording.
+
 ## [1.2.0] - 2026-03-19
 
 ### Added
